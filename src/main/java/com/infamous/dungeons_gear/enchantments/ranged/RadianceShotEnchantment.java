@@ -37,7 +37,7 @@ public class RadianceShotEnchantment extends Enchantment {
         RayTraceResult rayTraceResult = event.getRayTraceResult();
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
         int radianceShotLevel = EnchantUtils.enchantmentTagToLevel(arrow, RangedEnchantmentList.RADIANCE_SHOT);
         boolean uniqueWeaponFlag = arrow.getTags().contains("Sabrewing");
         if(radianceShotLevel > 0){

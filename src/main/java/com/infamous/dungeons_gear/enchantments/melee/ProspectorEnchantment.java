@@ -12,13 +12,13 @@ import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.infamous.dungeons_gear.DungeonsGear.MODID;
 import static com.infamous.dungeons_gear.items.WeaponList.THE_LAST_LAUGH;
-import static net.minecraft.world.World.field_234919_h_;
 
 @Mod.EventBusSubscriber(modid= MODID)
 public class ProspectorEnchantment extends Enchantment{
@@ -74,6 +74,6 @@ public class ProspectorEnchantment extends Enchantment{
     }
 
     private static boolean isInNether(LivingEntity victim){
-        return victim.getEntityWorld().func_234923_W_() == field_234919_h_;
+        return victim.getEntityWorld().getDimension().getType() == DimensionType.THE_NETHER;
     }
 }

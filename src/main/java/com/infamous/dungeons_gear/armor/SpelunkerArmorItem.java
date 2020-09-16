@@ -1,17 +1,25 @@
 package com.infamous.dungeons_gear.armor;
 
+import static com.infamous.dungeons_gear.items.ArmorList.CAVE_CRAWLER;
+import static com.infamous.dungeons_gear.items.ArmorList.CAVE_CRAWLER_HELMET;
+import static com.infamous.dungeons_gear.items.ArmorList.SPELUNKER_ARMOR;
+import static com.infamous.dungeons_gear.items.ArmorList.SPELUNKER_ARMOR_HELMET;
+
+import java.util.List;
+import java.util.UUID;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.infamous.dungeons_gear.DungeonsGear;
 import com.infamous.dungeons_gear.armor.models.SpelunkerArmorModel;
 import com.infamous.dungeons_gear.interfaces.IArmor;
+
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
@@ -25,11 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.List;
-import java.util.UUID;
-
-import static com.infamous.dungeons_gear.items.ArmorList.*;
-
 public class SpelunkerArmorItem extends ArmorItem implements IArmor {
 
     private static final UUID[] ARMOR_MODIFIERS = new UUID[]{
@@ -41,7 +44,7 @@ public class SpelunkerArmorItem extends ArmorItem implements IArmor {
     private final boolean unique;
     private final int damageReduceAmount;
     private final float toughness;
-    private final Multimap<Attribute, AttributeModifier> attributeModifiers;
+    private final Multimap<String, AttributeModifier> attributeModifiers;
 
     public SpelunkerArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties, boolean unique) {
         super(armorMaterial, slotType, properties);
@@ -50,14 +53,11 @@ public class SpelunkerArmorItem extends ArmorItem implements IArmor {
         this.damageReduceAmount = armorMaterial.getDamageReductionAmount(slot);
         this.toughness = armorMaterial.getToughness();
 
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<String, AttributeModifier> builder = ImmutableMultimap.builder();
         UUID uuid = ARMOR_MODIFIERS[slot.getIndex()];
-        builder.put(Attributes.field_233826_i_, new AttributeModifier(uuid, "Armor modifier", (double)this.damageReduceAmount, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.field_233827_j_, new AttributeModifier(uuid, "Armor toughness", (double)this.toughness, AttributeModifier.Operation.ADDITION));
-        if (this.field_234655_c_ > 0) {
-            builder.put(Attributes.field_233820_c_, new AttributeModifier(uuid, "Armor knockback resistance", (double)this.field_234655_c_, AttributeModifier.Operation.ADDITION));
-        }
-        builder.put(Attributes.field_233823_f_, new AttributeModifier(uuid, "Armor attack damage boost", 0.2D * 0.5D, AttributeModifier.Operation.MULTIPLY_BASE));
+        builder.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(uuid, "Armor modifier", (double)this.damageReduceAmount, AttributeModifier.Operation.ADDITION));
+        builder.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(uuid, "Armor toughness", (double)this.toughness, AttributeModifier.Operation.ADDITION));
+        builder.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(uuid, "Armor attack damage boost", 0.2D * 0.5D, AttributeModifier.Operation.MULTIPLY_BASE));
         this.attributeModifiers = builder.build();
     }
 
@@ -82,7 +82,7 @@ public class SpelunkerArmorItem extends ArmorItem implements IArmor {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == this.slot ? this.attributeModifiers : super.getAttributeModifiers(equipmentSlot);
     }
 
@@ -104,7 +104,7 @@ public class SpelunkerArmorItem extends ArmorItem implements IArmor {
         }
         list.add(new TranslationTextComponent(
                 "attribute.name.givesYouAPetBat")
-                .func_240701_a_(TextFormatting.GREEN));
+                .applyTextStyle(TextFormatting.GREEN));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.infamous.dungeons_gear.enchantments.armor;
 
-import com.infamous.dungeons_gear.enchantments.ModEnchantmentTypes;
 import com.infamous.dungeons_gear.enchantments.types.HealthAbilityEnchantment;
 import com.infamous.dungeons_gear.utilties.EnchantUtils;
 import com.infamous.dungeons_gear.enchantments.lists.ArmorEnchantmentList;
@@ -27,7 +26,7 @@ import static com.infamous.dungeons_gear.DungeonsGear.MODID;
 public class CowardiceEnchantment extends HealthAbilityEnchantment {
 
     public CowardiceEnchantment() {
-        super(Rarity.RARE, ModEnchantmentTypes.ARMOR, new EquipmentSlotType[]{
+        super(Rarity.RARE, EnchantmentType.ARMOR_CHEST, new EquipmentSlotType[]{
                 EquipmentSlotType.HEAD,
                 EquipmentSlotType.CHEST,
                 EquipmentSlotType.LEGS,
@@ -66,9 +65,9 @@ public class CowardiceEnchantment extends HealthAbilityEnchantment {
         if (event.getSource() instanceof IndirectEntityDamageSource) {
             if (event.getSource().getImmediateSource() instanceof AbstractArrowEntity) {
                 AbstractArrowEntity arrowEntity = (AbstractArrowEntity) event.getSource().getImmediateSource();
-                Entity shooterEntity = arrowEntity.func_234616_v_();
+                Entity shooterEntity = arrowEntity.getShooter();
                 if (shooterEntity instanceof PlayerEntity) {
-                    PlayerEntity playerEntity = (PlayerEntity) arrowEntity.func_234616_v_();
+                    PlayerEntity playerEntity = (PlayerEntity) arrowEntity.getShooter();
                     if(playerEntity != null){
                         if (playerEntity.getHealth() == playerEntity.getMaxHealth()) {
                             if (EnchantUtils.hasEnchantment(playerEntity, ArmorEnchantmentList.COWARDICE)) {

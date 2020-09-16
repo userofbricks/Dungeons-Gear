@@ -4,7 +4,6 @@ import com.infamous.dungeons_gear.DungeonsGear;
 import com.infamous.dungeons_gear.capabilities.weapon.IWeapon;
 import com.infamous.dungeons_gear.capabilities.weapon.WeaponProvider;
 import com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList;
-import com.infamous.dungeons_gear.utilties.EnchantUtils;
 import com.infamous.dungeons_gear.utilties.AbilityUtils;
 import com.infamous.dungeons_gear.utilties.RangedUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -75,8 +74,8 @@ public class BowEvents {
         RayTraceResult rayTraceResult = event.getRayTraceResult();
         if(rayTraceResult instanceof EntityRayTraceResult){
             AbstractArrowEntity arrowEntity = event.getArrow();
-            if(arrowEntity.func_234616_v_() instanceof LivingEntity){
-                LivingEntity shooter = (LivingEntity)arrowEntity.func_234616_v_();
+            if(arrowEntity.getShooter() instanceof LivingEntity){
+                LivingEntity shooter = (LivingEntity)arrowEntity.getShooter();
                 LivingEntity victim = (LivingEntity) ((EntityRayTraceResult)rayTraceResult).getEntity();
                 boolean huntingBowFlag = arrowEntity.getTags().contains("HuntingBow")
                         || arrowEntity.getTags().contains("HuntersPromise")

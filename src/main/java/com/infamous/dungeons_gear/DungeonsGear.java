@@ -12,9 +12,6 @@ import com.infamous.dungeons_gear.config.DungeonsGearConfig;
 import com.infamous.dungeons_gear.groups.ArmorGroup;
 import com.infamous.dungeons_gear.groups.ArtifactGroup;
 import com.infamous.dungeons_gear.init.ParticleInit;
-import com.infamous.dungeons_gear.items.VanillaItemModelProperties;
-import com.infamous.dungeons_gear.items.BowItemModelsProperties;
-import com.infamous.dungeons_gear.items.CrossbowItemModelsProperties;
 import com.infamous.dungeons_gear.combat.NetworkHandler;
 import com.infamous.dungeons_gear.entities.ModEntityTypes;
 import com.infamous.dungeons_gear.groups.MeleeWeaponGroup;
@@ -40,11 +37,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod("dungeons_gear")
 public class DungeonsGear
 {
-    // Directly reference a log4j logger.
     public static final String MODID = "dungeons_gear";
     public static final Logger LOGGER = LogManager.getLogger();
     public static final ItemGroup MELEE_WEAPON_GROUP = new MeleeWeaponGroup();
@@ -77,7 +72,8 @@ public class DungeonsGear
     }
 
 
-    private void setup(final FMLCommonSetupEvent event)
+    @SuppressWarnings("deprecation")
+	private void setup(final FMLCommonSetupEvent event)
     {
         DeferredWorkQueue.runLater(NetworkHandler::init);
         // some preinit code
@@ -88,10 +84,6 @@ public class DungeonsGear
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-
-        MinecraftForge.EVENT_BUS.register(new CrossbowItemModelsProperties());
-        MinecraftForge.EVENT_BUS.register(new BowItemModelsProperties());
-        MinecraftForge.EVENT_BUS.register(new VanillaItemModelProperties());
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.BEAM.get(), BeamRenderer::new);
     }
@@ -109,4 +101,5 @@ public class DungeonsGear
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
+
 }

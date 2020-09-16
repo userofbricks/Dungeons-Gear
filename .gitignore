@@ -19,7 +19,22 @@ build
 
 # other
 eclipse
-run
+run/config
+run/.mixin.out
+run/crash-reports
+run/defaultconfigs
+run/logs
+run/options.txt
+run/recourcepacks
+run/saves
+run/server.properties
+run/servers.dat
+run/usercache.json
+run/usernamecache.json
+.mcreator
+dungeonsgear.mcreator
+*.DS_Store
+.DS_Store
 
 # Files from Forge MDK
 forge*changelog.txt

@@ -8,7 +8,7 @@ import com.infamous.dungeons_gear.enchantments.lists.MeleeEnchantmentList;
 import com.infamous.dungeons_gear.utilties.AbilityUtils;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -49,7 +49,7 @@ public class SwirlingEnchantment extends AOEDamageEnchantment {
             if(EnchantUtils.hasEnchantment(mainhand, MeleeEnchantmentList.SWIRLING)){
                 int swirlingLevel = EnchantmentHelper.getEnchantmentLevel(MeleeEnchantmentList.SWIRLING, mainhand);
                 // gets the attack damage of the original attack before any enchantment modifiers are added
-                float attackDamage = (float)attacker.func_233637_b_(Attributes.field_233823_f_);
+                float attackDamage = (float)attacker.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
                 float cooledAttackStrength = attacker.getCooledAttackStrength(0.5F);
                 attackDamage *= 0.2F + cooledAttackStrength * cooledAttackStrength * 0.8F;
 

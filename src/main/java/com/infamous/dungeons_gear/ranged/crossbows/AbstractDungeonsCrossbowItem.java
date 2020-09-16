@@ -9,25 +9,25 @@ import com.infamous.dungeons_gear.utilties.RangedUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ICrossbowUser;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.item.FireworkRocketEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public abstract class AbstractDungeonsCrossbowItem extends CrossbowItem implements IRangedWeapon {
@@ -208,7 +208,7 @@ public abstract class AbstractDungeonsCrossbowItem extends CrossbowItem implemen
 
     public float getProjectileVelocity(ItemStack stack) {
         boolean fastProjectiles = shootsFasterArrows(stack);
-        if(hasChargedProjectile(stack, Items.FIREWORK_ROCKET)){
+        if(RangedUtils.hasChargedProjectile(stack, Items.FIREWORK_ROCKET)){
             if(fastProjectiles){
                 return 3.2F;
             }
@@ -243,38 +243,38 @@ public abstract class AbstractDungeonsCrossbowItem extends CrossbowItem implemen
     }
 
     // FORMER CROSSBOWITEM STATIC METHODS MADE NON-STATIC
-    private  void fireProjectile(World worldIn, LivingEntity shooter, Hand handIn, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean isCreativeMode, float velocity, float inaccuracy, float projectileAngle) {
+    private void fireProjectile(World worldIn, LivingEntity shooter, Hand handIn, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean isCreativeMode, float velocity, float inaccuracy, float projectileAngle) {
         if (!worldIn.isRemote) {
             boolean flag = projectile.getItem() == Items.FIREWORK_ROCKET;
-            ProjectileEntity projectileentity;
+            IProjectile iprojectile;
             if (flag) {
-                projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getPosX(), shooter.getPosYEye() - (double)0.15F, shooter.getPosZ(), true);
+               iprojectile = new FireworkRocketEntity(worldIn, projectile, shooter.getPosX(), shooter.getPosYEye() - (double)0.15F, shooter.getPosZ(), true);
             } else {
-                projectileentity = createCrossbowArrow(worldIn, shooter, crossbow, projectile);
-                if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((AbstractArrowEntity)projectileentity).pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
-                }
+               iprojectile = createCrossbowArrow(worldIn, shooter, crossbow, projectile);
+               if (isCreativeMode || projectileAngle != 0.0F) {
+                  ((AbstractArrowEntity)iprojectile).pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+               }
             }
 
             if (shooter instanceof ICrossbowUser) {
-                ICrossbowUser icrossbowuser = (ICrossbowUser)shooter;
-                icrossbowuser.func_230284_a_(Objects.requireNonNull(icrossbowuser.getAttackTarget()), crossbow, projectileentity, projectileAngle);
+               ICrossbowUser icrossbowuser = (ICrossbowUser)shooter;
+               icrossbowuser.shoot(icrossbowuser.getAttackTarget(), crossbow, iprojectile, projectileAngle);
             } else {
-                Vector3d vector3d1 = shooter.getUpVector(1.0F);
-                Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), projectileAngle, true);
-                Vector3d vector3d = shooter.getLook(1.0F);
-                Vector3f vector3f = new Vector3f(vector3d);
-                vector3f.transform(quaternion);
-                projectileentity.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), velocity, inaccuracy);
+               Vec3d vec3d1 = shooter.getUpVector(1.0F);
+               Quaternion quaternion = new Quaternion(new Vector3f(vec3d1), projectileAngle, true);
+               Vec3d vec3d = shooter.getLook(1.0F);
+               Vector3f vector3f = new Vector3f(vec3d);
+               vector3f.transform(quaternion);
+               iprojectile.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), velocity, inaccuracy);
             }
 
             crossbow.damageItem(flag ? 3 : 1, shooter, (p_220017_1_) -> {
-                p_220017_1_.sendBreakAnimation(handIn);
+               p_220017_1_.sendBreakAnimation(handIn);
             });
-            worldIn.addEntity(projectileentity);
+            worldIn.addEntity((Entity)iprojectile);
             worldIn.playSound((PlayerEntity)null, shooter.getPosX(), shooter.getPosY(), shooter.getPosZ(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
-        }
-    }
+         }
+      }
 
     // DUPLICATED CROSSBOWITEM STATIC METHODS
     private static void fireProjectilesAfter(World worldIn, LivingEntity shooter, ItemStack stack) {

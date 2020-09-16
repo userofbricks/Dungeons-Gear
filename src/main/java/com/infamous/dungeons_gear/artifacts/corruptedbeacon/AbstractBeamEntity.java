@@ -27,7 +27,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -109,7 +109,7 @@ public abstract class AbstractBeamEntity extends Entity{
     }
 
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vector3d lvt_9_1_ = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy, this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy, this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy).scale((double)velocity);
+    	Vec3d lvt_9_1_ = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy, this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy, this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy).scale((double)velocity);
         this.setMotion(lvt_9_1_);
         float lvt_10_1_ = MathHelper.sqrt(horizontalMag(lvt_9_1_));
         this.rotationYaw = (float)(MathHelper.atan2(lvt_9_1_.x, lvt_9_1_.z) * 57.2957763671875D);
@@ -147,7 +147,7 @@ public abstract class AbstractBeamEntity extends Entity{
         super.tick();
 
         boolean isNoClip = this.getNoClip();
-        Vector3d vector3d = this.getMotion();
+        Vec3d vector3d = this.getMotion();
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
             float f = MathHelper.sqrt(horizontalMag(vector3d));
             this.rotationYaw = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * 57.2957763671875D);
@@ -156,9 +156,9 @@ public abstract class AbstractBeamEntity extends Entity{
             this.prevRotationPitch = this.rotationPitch;
         }
 
-        BlockPos blockpos = this.func_233580_cy_();
+        BlockPos blockpos = this.getPosition();
         BlockState blockstate = this.world.getBlockState(blockpos);
-        Vector3d vector3d3;
+        Vec3d vector3d3;
         if (!blockstate.isAir(this.world, blockpos) && !isNoClip) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.world, blockpos);
             if (!voxelshape.isEmpty()) {
@@ -193,7 +193,7 @@ public abstract class AbstractBeamEntity extends Entity{
             ++this.timeInGround;
         } else {
             this.timeInGround = 0;
-            Vector3d vector3d2 = this.getPositionVec();
+            Vec3d vector3d2 = this.getPositionVec();
             vector3d3 = vector3d2.add(vector3d);
             RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
             if (((RayTraceResult)raytraceresult).getType() != RayTraceResult.Type.MISS) {
@@ -266,7 +266,7 @@ public abstract class AbstractBeamEntity extends Entity{
 
             this.setMotion(vector3d.scale((double)f2));
             if (!this.hasNoGravity() && !isNoClip) {
-                Vector3d vector3d4 = this.getMotion();
+            	Vec3d vector3d4 = this.getMotion();
                 this.setMotion(vector3d4.x, vector3d4.y - 0.05000000074505806D, vector3d4.z);
             }
 
@@ -281,12 +281,12 @@ public abstract class AbstractBeamEntity extends Entity{
 
     private void resetTicksInGround() {
         this.inGround = false;
-        Vector3d vector3d = this.getMotion();
+        Vec3d vector3d = this.getMotion();
         this.setMotion(vector3d.mul((double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F)));
         this.ticksInGround = 0;
     }
 
-    public void move(MoverType moverType, Vector3d vector3d) {
+    public void move(MoverType moverType, Vec3d vector3d) {
         super.move(moverType, vector3d);
         if (moverType != MoverType.SELF && this.isInGroundButNotColliding()) {
             this.resetTicksInGround();
@@ -368,7 +368,7 @@ public abstract class AbstractBeamEntity extends Entity{
                 }
 
                 if (this.knockbackStrength > 0) {
-                    Vector3d vector3d = this.getMotion().mul(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockbackStrength * 0.6D);
+                	Vec3d vector3d = this.getMotion().mul(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockbackStrength * 0.6D);
                     if (vector3d.lengthSquared() > 0.0D) {
                         livingentity.addVelocity(vector3d.x, 0.1D, vector3d.z);
                     }
@@ -381,7 +381,7 @@ public abstract class AbstractBeamEntity extends Entity{
 
                 this.beamHit(livingentity);
                 if (entity1 != null && livingentity != entity1 && livingentity instanceof PlayerEntity && entity1 instanceof ServerPlayerEntity && !this.isSilent()) {
-                    ((ServerPlayerEntity)entity1).connection.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.field_241770_g_, 0.0F));
+                    ((ServerPlayerEntity)entity1).connection.sendPacket(new SChangeGameStatePacket(6, 0.0F));
                 }
 
                 if (!entity.isAlive() && this.hitEntities != null) {
@@ -391,9 +391,9 @@ public abstract class AbstractBeamEntity extends Entity{
                 if (!this.world.isRemote && entity1 instanceof ServerPlayerEntity) {
                     ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)entity1;
                     if (this.hitEntities != null && this.getShotFromCrossbow()) {
-                        CriteriaTriggers.KILLED_BY_CROSSBOW.func_234941_a_(serverplayerentity, this.hitEntities);
+                        CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, this.hitEntities, this.hitEntities.size());
                     } else if (!entity.isAlive() && this.getShotFromCrossbow()) {
-                        CriteriaTriggers.KILLED_BY_CROSSBOW.func_234941_a_(serverplayerentity, Arrays.asList(entity));
+                        CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, Arrays.asList(entity), 0);
                     }
                 }
             }
@@ -426,9 +426,9 @@ public abstract class AbstractBeamEntity extends Entity{
         this.inBlockState = this.world.getBlockState(p_230299_1_.getPos());
         BlockState lvt_3_1_ = this.world.getBlockState(p_230299_1_.getPos());
         //lvt_3_1_.onProjectileCollision(this.world, lvt_3_1_, p_230299_1_, this);
-        Vector3d vector3d = p_230299_1_.getHitVec().subtract(this.getPosX(), this.getPosY(), this.getPosZ());
+        Vec3d vector3d = p_230299_1_.getHitVec().subtract(this.getPosX(), this.getPosY(), this.getPosZ());
         this.setMotion(vector3d);
-        Vector3d vector3d1 = vector3d.normalize().scale(0.05000000074505806D);
+        Vec3d vector3d1 = vector3d.normalize().scale(0.05000000074505806D);
         this.setRawPosition(this.getPosX() - vector3d1.x, this.getPosY() - vector3d1.y, this.getPosZ() - vector3d1.z);
         this.playSound(this.getHitGroundSound(), 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
         this.inGround = true;
@@ -452,7 +452,7 @@ public abstract class AbstractBeamEntity extends Entity{
     }
 
     @Nullable
-    protected EntityRayTraceResult rayTraceEntities(Vector3d vector3d, Vector3d vector3d1) {
+    protected EntityRayTraceResult rayTraceEntities(Vec3d vector3d, Vec3d vector3d1) {
         return ProjectileHelper.rayTraceEntities(this.world, this, vector3d, vector3d1, this.getBoundingBox().expand(this.getMotion()).grow(1.0D), this::func_230298_a_);
     }
 
@@ -712,8 +712,8 @@ public abstract class AbstractBeamEntity extends Entity{
         float y = -MathHelper.sin((rotationPitch + p_234612_4_) * 0.017453292F);
         float z = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(rotationPitch * 0.017453292F);
         this.shoot((double)x, (double)y, (double)z, p_234612_5_, p_234612_6_);
-        Vector3d entityMotion = entity.getMotion();
-        this.setMotion(this.getMotion().add(entityMotion.x, entity.func_233570_aj_() ? 0.0D : entityMotion.y, entityMotion.z));
+        Vec3d entityMotion = entity.getMotion();
+        this.setMotion(this.getMotion().add(entityMotion.x, entity.onGround ? 0.0D : entityMotion.y, entityMotion.z));
     }
 
     protected void onImpact(RayTraceResult rayTraceResult) {
@@ -728,7 +728,7 @@ public abstract class AbstractBeamEntity extends Entity{
     }
 
     protected void func_234617_x_() {
-        Vector3d lvt_1_1_ = this.getMotion();
+    	Vec3d lvt_1_1_ = this.getMotion();
         float lvt_2_1_ = MathHelper.sqrt(horizontalMag(lvt_1_1_));
         this.rotationPitch = func_234614_e_(this.prevRotationPitch, (float)(MathHelper.atan2(lvt_1_1_.y, (double)lvt_2_1_) * 57.2957763671875D));
         this.rotationYaw = func_234614_e_(this.prevRotationYaw, (float)(MathHelper.atan2(lvt_1_1_.x, lvt_1_1_.z) * 57.2957763671875D));

@@ -1,5 +1,7 @@
 package com.infamous.dungeons_gear.artifacts;
 
+import java.util.List;
+
 import com.infamous.dungeons_gear.DungeonsGear;
 import com.infamous.dungeons_gear.capabilities.summoning.ISummonable;
 import com.infamous.dungeons_gear.capabilities.summoning.ISummoner;
@@ -10,29 +12,34 @@ import com.infamous.dungeons_gear.goals.LlamaOwnerHurtByTargetGoal;
 import com.infamous.dungeons_gear.goals.LlamaOwnerHurtTargetGoal;
 import com.infamous.dungeons_gear.interfaces.IArtifact;
 import com.infamous.dungeons_gear.items.ArtifactList;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
+import net.minecraft.item.Rarity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.List;
 
 
 public class WonderfulWheatItem extends Item implements IArtifact {
@@ -66,9 +73,8 @@ public class WonderfulWheatItem extends Item implements IArtifact {
                     if (llamaEntity!= null) {
                         llamaEntity.setTamedBy(itemUseContextPlayer);
                         llamaEntity.setVariant(2);
-                        llamaEntity.setStrength(5);
-                        llamaEntity.getAttribute(Attributes.field_233818_a_).setBaseValue(30.0D);
-                        llamaEntity.horseChest.setInventorySlotContents(1, new ItemStack(Items.RED_CARPET.asItem()));
+                        llamaEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+                        llamaEntity.replaceItemInInventory(1, new ItemStack(Items.RED_CARPET.asItem()));
                         llamaEntity.setLocationAndAngles((double)blockPos.getX() + 0.5D, (double)blockPos.getY() + 0.05D, (double)blockPos.getZ() + 0.5D, 0.0F, 0.0F);
 
                         llamaEntity.targetSelector.addGoal(1, new LlamaOwnerHurtByTargetGoal(llamaEntity));

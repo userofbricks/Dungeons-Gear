@@ -8,7 +8,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -74,16 +74,16 @@ public class MeleeEvents {
                         playerEntity.world.playSound((PlayerEntity)null, playerEntity.getPosX(), playerEntity.getPosY(), playerEntity.getPosZ(), SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, playerEntity.getSoundCategory(), 1.0F, 1.0F);
                         ++attackKnockbackStrength;
                     }
-                    victim.func_233627_a_(attackKnockbackStrength * 0.5F, (double) MathHelper.sin(playerEntity.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(playerEntity.rotationYaw * ((float)Math.PI / 180F))));
+                    victim.knockBack(victim, attackKnockbackStrength * 0.5F, (double) MathHelper.sin(playerEntity.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(playerEntity.rotationYaw * ((float)Math.PI / 180F))));
                     playerEntity.setMotion(playerEntity.getMotion().mul(0.6D, 1.0D, 0.6D));
 
                 }
                 else if(attacker instanceof MobEntity){
                     MobEntity mobEntity = (MobEntity) attacker;
-                    float attackKnockbackStrength = (float)mobEntity.func_233637_b_(Attributes.field_233824_g_);
+                    float attackKnockbackStrength = (float)mobEntity.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).getValue();
                     attackKnockbackStrength += 1;
                     if (attackKnockbackStrength > 0.0F) {
-                        victim.func_233627_a_(attackKnockbackStrength * 0.5F, (double)MathHelper.sin(mobEntity.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(mobEntity.rotationYaw * ((float)Math.PI / 180F))));
+                        victim.knockBack(victim, attackKnockbackStrength * 0.5F, (double)MathHelper.sin(mobEntity.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(mobEntity.rotationYaw * ((float)Math.PI / 180F))));
                         mobEntity.setMotion(mobEntity.getMotion().mul(0.6D, 1.0D, 0.6D));
                     }
                 }

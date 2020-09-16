@@ -43,7 +43,7 @@ public class GrowingEnchantment extends Enchantment {
         if(!EnchantUtils.arrowHitLivingEntity(rayTraceResult)) return;
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
         LivingEntity victim = (LivingEntity) ((EntityRayTraceResult)rayTraceResult).getEntity();
         int growingLevel = EnchantUtils.enchantmentTagToLevel(arrow, RangedEnchantmentList.GROWING);
         boolean uniqueWeaponFlag = arrow.getTags().contains("Bonebow") || arrow.getTags().contains("BabyCrossbow");

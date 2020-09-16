@@ -43,7 +43,7 @@ public class ReplenishEnchantment extends Enchantment {
         if(!EnchantUtils.arrowHitLivingEntity(rayTraceResult)) return;
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
         if(shooter instanceof PlayerEntity){
             PlayerEntity player = (PlayerEntity) shooter;
             int replenishLevel = EnchantUtils.enchantmentTagToLevel(arrow, RangedEnchantmentList.REPLENISH);

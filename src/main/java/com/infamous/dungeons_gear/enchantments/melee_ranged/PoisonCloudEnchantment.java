@@ -79,7 +79,7 @@ public class PoisonCloudEnchantment extends Enchantment {
         //if(!EnchantUtils.arrowHitLivingEntity(rayTraceResult)) return;
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
 
         int poisonLevel = EnchantUtils.enchantmentTagToLevel(arrow, MeleeRangedEnchantmentList.POISON_CLOUD);
         boolean uniqueWeaponFlag = arrow.getTags().contains("TheGreenMenace");

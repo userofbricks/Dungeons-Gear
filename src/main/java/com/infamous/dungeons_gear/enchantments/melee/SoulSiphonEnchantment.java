@@ -39,7 +39,7 @@ public class SoulSiphonEnchantment extends Enchantment {
         if(chance <=  0.1F){
             ((PlayerEntity)user).giveExperiencePoints(level*3);
             // soul particles
-            PROXY.spawnParticles(target, ParticleTypes.field_239812_C_);
+            PROXY.spawnParticles(target, ParticleTypes.FLAME);
         }
     }
 
@@ -56,7 +56,7 @@ public class SoulSiphonEnchantment extends Enchantment {
             if(chance <=  0.1F) {
                 attacker.giveExperiencePoints(3);
                 // soul particles
-                PROXY.spawnParticles(victim, ParticleTypes.field_239812_C_);
+                PROXY.spawnParticles(victim, ParticleTypes.FLAME);
             }
         }
     }

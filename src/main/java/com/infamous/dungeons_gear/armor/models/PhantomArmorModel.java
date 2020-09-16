@@ -5,14 +5,14 @@ package com.infamous.dungeons_gear.armor.models;// Made with Blockbench 3.6.6
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.entity.monster.ZombiePigmanEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
-import net.minecraft.entity.monster.ZombifiedPiglinEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -94,8 +94,7 @@ public class PhantomArmorModel<T extends LivingEntity> extends BipedModel<T> {
 						this.entity.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("guardvillagers:guard"));
 
 		boolean piglin =
-				this.entity instanceof PiglinEntity ||
-						this.entity instanceof ZombifiedPiglinEntity;
+				this.entity instanceof ZombiePigmanEntity;
 
 
 

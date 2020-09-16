@@ -70,7 +70,7 @@ public class GravityEnchantment extends Enchantment {
         //if(!EnchantUtils.arrowHitLivingEntity(rayTraceResult)) return;
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
         int gravityLevel = EnchantUtils.enchantmentTagToLevel(arrow, MeleeRangedEnchantmentList.GRAVITY);
         boolean uniqueWeaponFlag = arrow.getTags().contains("Voidcaller") || arrow.getTags().contains("ImplodingCrossbow");
         if(uniqueWeaponFlag

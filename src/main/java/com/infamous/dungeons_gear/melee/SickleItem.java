@@ -1,7 +1,9 @@
 package com.infamous.dungeons_gear.melee;
 
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMultimap.Builder;
 import com.infamous.dungeons_gear.combat.CombatEventHandler;
 import com.infamous.dungeons_gear.interfaces.IOffhandAttack;
 import com.infamous.dungeons_gear.interfaces.IMeleeWeapon;
@@ -10,7 +12,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -26,8 +28,17 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class SickleItem extends HoeItem implements IOffhandAttack, IMeleeWeapon {
+	   private final Multimap<String, AttributeModifier> field_234674_d_;
+	   private final float attackDamage;
+	   protected final float attackSpeed;
     public SickleItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
-        super(tier, attackDamageIn, attackSpeedIn, builder);
+        super(tier, attackSpeedIn, builder);
+        this.attackDamage = attackDamageIn + tier.getAttackDamage();
+        this.attackSpeed = attackSpeedIn;
+        Builder<String, AttributeModifier> builder1 = ImmutableMultimap.builder();
+        builder1.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
+        builder1.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, AttributeModifier.Operation.ADDITION));
+        this.field_234674_d_ = builder1.build();
     }
 
     // This is a designated weapon, so it will not be penalized for attacking as a normal pickaxe would
@@ -44,7 +55,7 @@ public class SickleItem extends HoeItem implements IOffhandAttack, IMeleeWeapon 
         return enchantment.type.canEnchantItem(Items.IRON_SWORD) && enchantment != Enchantments.SWEEPING;
     }
 
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND  || equipmentSlot == EquipmentSlotType.OFFHAND?
                 this.field_234674_d_ : super.getAttributeModifiers(equipmentSlot);
     }

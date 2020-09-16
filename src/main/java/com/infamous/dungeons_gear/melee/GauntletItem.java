@@ -11,11 +11,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -32,16 +30,16 @@ import java.util.List;
 
 import static com.infamous.dungeons_gear.items.WeaponList.SOUL_FIST;
 
-public class GauntletItem extends TieredItem implements IOffhandAttack, IVanishable, IMeleeWeapon, ISoulGatherer {
+public class GauntletItem extends TieredItem implements IOffhandAttack, IMeleeWeapon, ISoulGatherer {
     private final float attackDamage;
-    private final Multimap<Attribute, AttributeModifier> attributeModifierMultimap;
+    private final Multimap<String, AttributeModifier> attributeModifierMultimap;
 
     public GauntletItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties properties) {
         super(tier, properties);
         this.attackDamage = (float)attackDamageIn + tier.getAttackDamage();
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.field_233823_f_, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.field_233825_h_, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
+        ImmutableMultimap.Builder<String, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
+        builder.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
         this.attributeModifierMultimap = builder.build();
     }
 
@@ -93,7 +91,7 @@ public class GauntletItem extends TieredItem implements IOffhandAttack, IVanisha
     /**
      * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
      */
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND || equipmentSlot == EquipmentSlotType.OFFHAND ? this.attributeModifierMultimap : super.getAttributeModifiers(equipmentSlot);
     }
 

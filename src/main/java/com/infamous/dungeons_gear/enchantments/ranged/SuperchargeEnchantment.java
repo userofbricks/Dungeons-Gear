@@ -1,21 +1,18 @@
 package com.infamous.dungeons_gear.enchantments.ranged;
 
-import com.infamous.dungeons_gear.utilties.EnchantUtils;
+import static com.infamous.dungeons_gear.DungeonsGear.MODID;
+
 import com.infamous.dungeons_gear.enchantments.ModEnchantmentTypes;
 import com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList;
+import com.infamous.dungeons_gear.utilties.EnchantUtils;
+
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import static com.infamous.dungeons_gear.DungeonsGear.MODID;
-import static com.infamous.dungeons_gear.items.RangedWeaponList.GUARDIAN_BOW;
 
 @Mod.EventBusSubscriber(modid= MODID)
 public class SuperchargeEnchantment extends Enchantment {
@@ -43,7 +40,7 @@ public class SuperchargeEnchantment extends Enchantment {
         boolean uniqueWeaponFlag = arrow.getTags().contains("GuardianBow");
         if(superchargeLevel > 0 || uniqueWeaponFlag){
             double originalDamage = arrow.getDamage();
-            int originalKnockback = arrow.knockbackStrength;
+            int originalKnockback = EnchantUtils.enchantmentTagToLevel(arrow, Enchantments.PUNCH);
             double damageModifier = 0;
             if(superchargeLevel == 1) damageModifier = 1.2D;
             if(superchargeLevel == 2) damageModifier = 1.4D;

@@ -1,16 +1,21 @@
 package com.infamous.dungeons_gear.combat;
 
-import com.infamous.dungeons_gear.interfaces.IOffhandAttack;
 import com.infamous.dungeons_gear.interfaces.IExtendedAttackReach;
+import com.infamous.dungeons_gear.interfaces.IOffhandAttack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -108,7 +113,7 @@ public class CombatEventHandler {
         if (viewEntity != null && mc.world != null) {
             double reachDistance = (double)reach;
             RayTraceResult rayTrace = viewEntity.pick(reachDistance, 0.0F, false);
-            Vector3d eyePos = viewEntity.getEyePosition(0.0F);
+            Vec3d eyePos = viewEntity.getEyePosition(0.0F);
             boolean hasExtendedReach = false;
             double attackReach = reachDistance;
             if (mc.playerController.extendedReach() && reachDistance < 6.0D) {
@@ -120,12 +125,12 @@ public class CombatEventHandler {
 
             attackReach = rayTrace.getHitVec().squareDistanceTo(eyePos);
 
-            Vector3d lookVec = viewEntity.getLook(1.0F);
-            Vector3d attackVec = eyePos.add(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
+            Vec3d lookVec = viewEntity.getLook(1.0F);
+            Vec3d attackVec = eyePos.add(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
             AxisAlignedBB axisAlignedBB = viewEntity.getBoundingBox().expand(lookVec.scale(reachDistance)).grow(1.0D, 1.0D, 1.0D);
             EntityRayTraceResult entityRayTrace = ProjectileHelper.rayTraceEntities(viewEntity, eyePos, attackVec, axisAlignedBB, (entity) -> !entity.isSpectator() && entity.canBeCollidedWith(), attackReach);
             if (entityRayTrace != null) {
-                Vector3d hitVec = entityRayTrace.getHitVec();
+            	Vec3d hitVec = entityRayTrace.getHitVec();
                 double squareDistanceTo = eyePos.squareDistanceTo(hitVec);
                 if (hasExtendedReach && squareDistanceTo > (double)(reach * reach)) {
                     result = BlockRayTraceResult.createMiss(hitVec, Direction.getFacingFromVector(lookVec.x, lookVec.y, lookVec.z), new BlockPos(hitVec));

@@ -1,16 +1,15 @@
 package com.infamous.dungeons_gear.utilties;
 
+import static com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList.rangedEnchantmentToStringMap;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-
-import static com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList.rangedEnchantmentToStringMap;
 
 public class EnchantUtils {
 
@@ -23,7 +22,7 @@ public class EnchantUtils {
     }
 
     public static boolean shooterIsLiving(AbstractArrowEntity arrowEntity) {
-        return arrowEntity.func_234616_v_() != null && arrowEntity.func_234616_v_() instanceof LivingEntity;
+        return arrowEntity.getShooter() != null && arrowEntity.getShooter() instanceof LivingEntity;
     }
 
     public static boolean arrowHitLivingEntity(RayTraceResult rayTraceResult) {

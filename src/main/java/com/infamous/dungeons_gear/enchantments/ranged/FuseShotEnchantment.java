@@ -38,7 +38,7 @@ public class FuseShotEnchantment extends Enchantment {
     public static void onFuseShotImpact(ProjectileImpactEvent.Arrow event){
         AbstractArrowEntity arrowEntity = event.getArrow();
         if(EnchantUtils.shooterIsLiving(arrowEntity)){
-            LivingEntity shooter =(LivingEntity) arrowEntity.func_234616_v_();
+            LivingEntity shooter =(LivingEntity) arrowEntity.getShooter();
             if(arrowEntity.getTags().contains("FuseShot")){
                 if(event.getRayTraceResult() instanceof BlockRayTraceResult){
                     BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult)event.getRayTraceResult();

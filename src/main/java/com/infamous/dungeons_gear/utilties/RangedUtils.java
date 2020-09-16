@@ -1,24 +1,23 @@
 package com.infamous.dungeons_gear.utilties;
 
+import com.google.common.collect.Lists;
 import com.infamous.dungeons_gear.capabilities.weapon.IWeapon;
 import com.infamous.dungeons_gear.capabilities.weapon.WeaponProvider;
 import com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList;
 import com.infamous.dungeons_gear.ranged.bows.AbstractDungeonsBowItem;
 import com.infamous.dungeons_gear.ranged.crossbows.AbstractDungeonsCrossbowItem;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.LazyOptional;
 
-import java.util.Optional;
-
+import java.util.List;
 import static com.infamous.dungeons_gear.items.RangedWeaponList.*;
-import static net.minecraft.item.CrossbowItem.hasChargedProjectile;
 
 public class RangedUtils {
 
@@ -154,6 +153,30 @@ public class RangedUtils {
         return arrowVelocity;
     }
 
+    //-----Coppied from CrossbowItem-----
+    public static boolean hasChargedProjectile(ItemStack stack, Item ammoItem) {
+       return getChargedProjectiles(stack).stream().anyMatch((p_220010_1_) -> {
+          return p_220010_1_.getItem() == ammoItem;
+       });
+    }
+
+    //-----Coppied from CrossbowItem-----
+    public static List<ItemStack> getChargedProjectiles(ItemStack stack) {
+       List<ItemStack> list = Lists.newArrayList();
+       CompoundNBT compoundnbt = stack.getTag();
+       if (compoundnbt != null && compoundnbt.contains("ChargedProjectiles", 9)) {
+          ListNBT listnbt = compoundnbt.getList("ChargedProjectiles", 10);
+          if (listnbt != null) {
+             for(int i = 0; i < listnbt.size(); ++i) {
+                CompoundNBT compoundnbt1 = listnbt.getCompound(i);
+                list.add(ItemStack.read(compoundnbt1));
+             }
+          }
+       }
+
+       return list;
+    }
+
 
 
     public static float getVanillaOrModdedBowArrowVelocity(ItemStack stack, int charge) {
@@ -167,3 +190,26 @@ public class RangedUtils {
         return arrowVelocity;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

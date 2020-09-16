@@ -109,7 +109,7 @@ public class LlamaFollowOwnerGoal extends Goal {
     }
 
     private void func_226330_g_() {
-        BlockPos blockpos = this.owner.func_233580_cy_();
+        BlockPos blockpos = this.owner.getPosition();
 
         for(int i = 0; i < 10; ++i) {
             int j = this.func_226327_a_(-3, 3);
@@ -135,16 +135,16 @@ public class LlamaFollowOwnerGoal extends Goal {
         }
     }
 
-    private boolean func_226329_a_(BlockPos p_226329_1_) {
-        PathNodeType pathnodetype = WalkNodeProcessor.func_237231_a_(this.world, p_226329_1_.func_239590_i_());
+    private boolean func_226329_a_(BlockPos blockPos) {
+        PathNodeType pathnodetype = WalkNodeProcessor.func_227480_b_(this.world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
         if (pathnodetype != PathNodeType.WALKABLE) {
             return false;
         } else {
-            BlockState blockstate = this.world.getBlockState(p_226329_1_.down());
+            BlockState blockstate = this.world.getBlockState(blockPos.down());
             if (!this.passesThroughLeaves && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = p_226329_1_.subtract(this.llamaEntity.func_233580_cy_());
+                BlockPos blockpos = blockPos.subtract(this.llamaEntity.getPosition());
                 return this.world.hasNoCollisions(this.llamaEntity, this.llamaEntity.getBoundingBox().offset(blockpos));
             }
         }

@@ -48,8 +48,6 @@ public abstract class AbstractDungeonsBowItem extends BowItem implements IRanged
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-
-
                 float arrowVelocity = this.getBowArrowVelocity(stack, charge);
                 int multishotLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.MULTISHOT, stack);
                 int arrowsToFire = 1;
@@ -63,14 +61,14 @@ public abstract class AbstractDungeonsBowItem extends BowItem implements IRanged
                         if (!world.isRemote) {
                             ArrowItem arrowitem = (ArrowItem)((ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW));
                             AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(world, itemstack, playerentity);
-                            abstractarrowentity = this.customArrow(abstractarrowentity);
-                            if(i == 0) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 1) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 2) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 3) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 4) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 5) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-                            if(i == 6) abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            abstractarrowentity = this.customeArrow(abstractarrowentity);
+                            if(i == 0) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 1) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 2) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 3) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 4) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 5) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw + 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+                            if(i == 6) abstractarrowentity.shoot(playerentity, playerentity.rotationPitch, playerentity.rotationYaw - 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
                             if (arrowVelocity == 1.0F) {
                                 abstractarrowentity.setIsCritical(true);
                             }

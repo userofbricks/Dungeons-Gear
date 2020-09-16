@@ -40,7 +40,7 @@ public class RicochetEnchantment extends Enchantment {
         RayTraceResult rayTraceResult = event.getRayTraceResult();
         AbstractArrowEntity arrowEntity = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrowEntity)) return;;
-        LivingEntity shooter = (LivingEntity)arrowEntity.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrowEntity.getShooter();
         if(!(EnchantUtils.arrowHitLivingEntity(rayTraceResult))) return;
         EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult)rayTraceResult;
         LivingEntity victim = (LivingEntity) entityRayTraceResult.getEntity();

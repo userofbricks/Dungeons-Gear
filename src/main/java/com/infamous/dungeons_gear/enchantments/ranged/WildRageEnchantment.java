@@ -11,6 +11,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -19,12 +20,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.infamous.dungeons_gear.DungeonsGear.MODID;
+import static com.infamous.dungeons_gear.items.RangedWeaponList.THE_PINK_SCOUNDREL;
 
 @Mod.EventBusSubscriber(modid= MODID)
 public class WildRageEnchantment extends Enchantment {
 
     public WildRageEnchantment() {
-        super(Rarity.RARE, ModEnchantmentTypes.ARMOR_RANGED, new EquipmentSlotType[]{
+        super(Rarity.RARE, ModEnchantmentTypes.CHEST_RANGED, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND,
                 EquipmentSlotType.HEAD,
                 EquipmentSlotType.CHEST,
@@ -42,7 +44,7 @@ public class WildRageEnchantment extends Enchantment {
         if(!EnchantUtils.arrowHitMob(rayTraceResult)) return;
         AbstractArrowEntity arrow = event.getArrow();
         if(!EnchantUtils.shooterIsLiving(arrow)) return;
-        LivingEntity shooter = (LivingEntity)arrow.func_234616_v_();
+        LivingEntity shooter = (LivingEntity)arrow.getShooter();
         int wildRageLevel = EnchantUtils.enchantmentTagToLevel(arrow, RangedEnchantmentList.WILD_RAGE);
         boolean uniqueWeaponFlag = arrow.getTags().contains("ThePinkScoundrel");
         MobEntity victim = (MobEntity) ((EntityRayTraceResult)rayTraceResult).getEntity();

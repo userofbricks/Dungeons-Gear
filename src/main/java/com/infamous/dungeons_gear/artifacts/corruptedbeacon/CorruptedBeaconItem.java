@@ -1,23 +1,28 @@
 package com.infamous.dungeons_gear.artifacts.corruptedbeacon;
 
+import java.util.List;
+
 import com.infamous.dungeons_gear.interfaces.IArtifact;
 import com.infamous.dungeons_gear.interfaces.ISoulGatherer;
 import com.infamous.dungeons_gear.items.ArtifactList;
+
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class CorruptedBeaconItem extends Item implements IArtifact, ISoulGatherer {
     public static final int maxDamage = 100;
@@ -33,9 +38,9 @@ public class CorruptedBeaconItem extends Item implements IArtifact, ISoulGathere
             if (!world.isRemote) {
                 BeamEntity beamEntity = new BeamEntity(world,player);
 
-                Vector3d upVector = player.getUpVector(1.0F);
+                Vec3d upVector = player.getUpVector(1.0F);
                 Quaternion quaternion = new Quaternion(new Vector3f(upVector), 0, true);
-                Vector3d lookVector = player.getLook(1.0F);
+                Vec3d lookVector = player.getLook(1.0F);
                 Vector3f vector3f = new Vector3f(lookVector);
                 vector3f.transform(quaternion);
                 beamEntity.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), 10.0F, 0.0F);

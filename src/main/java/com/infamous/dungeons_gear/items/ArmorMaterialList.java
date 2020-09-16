@@ -127,7 +127,6 @@ public enum ArmorMaterialList implements IArmorMaterial
     }
 
     //getKnockbackResistance
-    @Override
     public float func_230304_f_() {
         return this.knockbackResistance;
     }

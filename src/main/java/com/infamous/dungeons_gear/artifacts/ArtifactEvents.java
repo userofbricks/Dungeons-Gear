@@ -1,23 +1,41 @@
 package com.infamous.dungeons_gear.artifacts;
 
+import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
+import static com.infamous.dungeons_gear.items.ArmorList.CAVE_CRAWLER;
+import static com.infamous.dungeons_gear.items.ArmorList.SPLENDID_ROBE;
+import static com.infamous.dungeons_gear.items.ArtifactList.GOLEM_KIT;
+import static com.infamous.dungeons_gear.items.ArtifactList.TASTY_BONE;
+import static com.infamous.dungeons_gear.items.ArtifactList.WONDERFUL_WHEAT;
+import static com.infamous.dungeons_gear.utilties.AbilityUtils.ricochetArrowLikeShield;
+
+import java.util.UUID;
+
 import com.infamous.dungeons_gear.DungeonsGear;
-import com.infamous.dungeons_gear.armor.BattleRobeItem;
-import com.infamous.dungeons_gear.armor.EvocationRobeItem;
-import com.infamous.dungeons_gear.armor.GuardsArmorItem;
 import com.infamous.dungeons_gear.armor.SoulRobeItem;
-import com.infamous.dungeons_gear.damagesources.SummonedFallingBlockDamageSource;
 import com.infamous.dungeons_gear.capabilities.combo.ComboProvider;
 import com.infamous.dungeons_gear.capabilities.combo.ICombo;
 import com.infamous.dungeons_gear.capabilities.summoning.ISummonable;
 import com.infamous.dungeons_gear.capabilities.summoning.ISummoner;
 import com.infamous.dungeons_gear.capabilities.summoning.SummonableProvider;
 import com.infamous.dungeons_gear.capabilities.summoning.SummonerProvider;
+import com.infamous.dungeons_gear.damagesources.SummonedFallingBlockDamageSource;
 import com.infamous.dungeons_gear.effects.CustomEffects;
+import com.infamous.dungeons_gear.enchantments.lists.ArmorEnchantmentList;
+import com.infamous.dungeons_gear.goals.BatFollowOwnerGoal;
+import com.infamous.dungeons_gear.goals.BatMeleeAttackGoal;
+import com.infamous.dungeons_gear.goals.BatOwnerHurtByTargetGoal;
+import com.infamous.dungeons_gear.goals.BatOwnerHurtTargetGoal;
+import com.infamous.dungeons_gear.goals.GolemOwnerHurtByTargetGoal;
+import com.infamous.dungeons_gear.goals.GolemOwnerHurtTargetGoal;
+import com.infamous.dungeons_gear.goals.IronGolemFollowOwnerGoal;
+import com.infamous.dungeons_gear.goals.LlamaFollowOwnerGoal;
+import com.infamous.dungeons_gear.goals.LlamaOwnerHurtByTargetGoal;
+import com.infamous.dungeons_gear.goals.LlamaOwnerHurtTargetGoal;
 import com.infamous.dungeons_gear.interfaces.IArmor;
 import com.infamous.dungeons_gear.utilties.EnchantUtils;
-import com.infamous.dungeons_gear.enchantments.lists.ArmorEnchantmentList;
-import com.infamous.dungeons_gear.goals.*;
+
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -43,17 +61,11 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.UUID;
-
-import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
-import static com.infamous.dungeons_gear.items.ArmorList.CAVE_CRAWLER;
-import static com.infamous.dungeons_gear.items.ArmorList.SPLENDID_ROBE;
-import static com.infamous.dungeons_gear.items.ArtifactList.*;
-import static com.infamous.dungeons_gear.utilties.AbilityUtils.*;
 
 @Mod.EventBusSubscriber(modid = DungeonsGear.MODID)
 public class ArtifactEvents {
@@ -189,7 +201,7 @@ public class ArtifactEvents {
     public static void onArrowJoinWorld(EntityJoinWorldEvent event){
         if(event.getEntity() instanceof AbstractArrowEntity){
             AbstractArrowEntity arrowEntity = (AbstractArrowEntity) event.getEntity();
-            Entity shooter = arrowEntity.func_234616_v_();
+            Entity shooter = arrowEntity.getShooter();
             if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 ICombo comboCap = playerEntity.getCapability(ComboProvider.COMBO_CAPABILITY).orElseThrow(IllegalStateException::new);
@@ -216,7 +228,7 @@ public class ArtifactEvents {
     public static void onTormentArrowImpact(ProjectileImpactEvent.Arrow event)  {
 
         AbstractArrowEntity arrowEntity = event.getArrow();
-        Entity shooter = arrowEntity.func_234616_v_();
+        Entity shooter = arrowEntity.getShooter();
 
         if (!(shooter instanceof PlayerEntity))return;
         PlayerEntity player = (PlayerEntity) shooter;
@@ -233,7 +245,7 @@ public class ArtifactEvents {
                 if(!(targetEntity instanceof LivingEntity)){
                     event.setCanceled(true);
                 }
-                int currentKnockbackStrength = arrowEntity.knockbackStrength;
+                int currentKnockbackStrength = EnchantUtils.enchantmentTagToLevel(arrowEntity, Enchantments.PUNCH);
                 (arrowEntity).setKnockbackStrength(currentKnockbackStrength + 1);
             }
 

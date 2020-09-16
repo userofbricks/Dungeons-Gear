@@ -1,21 +1,23 @@
 package com.infamous.dungeons_gear.enchantments.armor;
 
-import com.infamous.dungeons_gear.enchantments.ModEnchantmentTypes;
 import com.infamous.dungeons_gear.enchantments.types.HealthAbilityEnchantment;
 import com.infamous.dungeons_gear.interfaces.IArtifact;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.CooldownTracker;
 
 public class FinalShoutEnchantment extends HealthAbilityEnchantment {
 
     public FinalShoutEnchantment() {
-        super(Rarity.RARE, ModEnchantmentTypes.ARMOR, new EquipmentSlotType[]{
+        super(Rarity.RARE, EnchantmentType.ARMOR_CHEST, new EquipmentSlotType[]{
                 EquipmentSlotType.HEAD,
                 EquipmentSlotType.CHEST,
                 EquipmentSlotType.LEGS,
@@ -38,12 +40,14 @@ public class FinalShoutEnchantment extends HealthAbilityEnchantment {
             float currentHealth = player.getHealth();
             float maxHealth = player.getMaxHealth();
             if(currentHealth <= (0.25F * maxHealth)){
+            	PlayerInventory playerInventory = player.inventory;
                 CooldownTracker cooldownTracker = player.getCooldownTracker();
-                for(Item item : cooldownTracker.cooldowns.keySet()){
-                    if(item instanceof IArtifact){
-                        cooldownTracker.removeCooldown(item);
+            	for(int i = 0; i < playerInventory.getSizeInventory(); ++i) {
+                    ItemStack itemstack = playerInventory.getStackInSlot(i);
+                    if (!itemstack.isEmpty() && itemstack.getItem() instanceof IArtifact) {
+                        cooldownTracker.removeCooldown(itemstack.getItem());
                     }
-                }
+                 }
             }
         }
     }

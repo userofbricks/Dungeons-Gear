@@ -4,6 +4,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,8 +15,8 @@ import javax.annotation.Nullable;
 public class ElectricShockParticle extends SpriteTexturedParticle {
 
 
-    private ElectricShockParticle(ClientWorld clientWorld, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeed, double ySpeed, double zSpeed) {
-        super(clientWorld, xCoordIn, yCoordIn, zCoordIn, 0, 0, 0);
+    private ElectricShockParticle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeed, double ySpeed, double zSpeed) {
+        super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0, 0, 0);
         this.motionX *= 0.009999999776482582D;
         this.motionY *= 0.009999999776482582D;
         this.motionZ *= 0.009999999776482582D;
@@ -67,7 +68,7 @@ public class ElectricShockParticle extends SpriteTexturedParticle {
 
         @Nullable
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             ElectricShockParticle shockParticle = new ElectricShockParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             shockParticle.setColor(1.0f, 1.0f, 1.0f);
             shockParticle.selectSpriteRandomly(this.spriteSet);

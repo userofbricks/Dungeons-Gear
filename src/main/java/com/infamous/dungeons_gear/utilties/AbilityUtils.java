@@ -1,5 +1,14 @@
 package com.infamous.dungeons_gear.utilties;
 
+import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
+import static com.infamous.dungeons_gear.items.RangedWeaponList.FERAL_SOUL_CROSSBOW;
+import static net.minecraft.entity.Entity.horizontalMag;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
 import com.infamous.dungeons_gear.capabilities.summoning.ISummonable;
 import com.infamous.dungeons_gear.capabilities.summoning.ISummoner;
 import com.infamous.dungeons_gear.capabilities.summoning.SummonableProvider;
@@ -7,46 +16,52 @@ import com.infamous.dungeons_gear.capabilities.summoning.SummonerProvider;
 import com.infamous.dungeons_gear.damagesources.ElectricShockDamageSource;
 import com.infamous.dungeons_gear.effects.CustomEffects;
 import com.infamous.dungeons_gear.enchantments.lists.MeleeRangedEnchantmentList;
-import com.infamous.dungeons_gear.goals.*;
+import com.infamous.dungeons_gear.goals.BatFollowOwnerGoal;
+import com.infamous.dungeons_gear.goals.BatMeleeAttackGoal;
+import com.infamous.dungeons_gear.goals.BatOwnerHurtByTargetGoal;
+import com.infamous.dungeons_gear.goals.BatOwnerHurtTargetGoal;
+import com.infamous.dungeons_gear.goals.GoalUtils;
+import com.infamous.dungeons_gear.goals.WildRageAttackGoal;
 import com.infamous.dungeons_gear.init.ParticleInit;
 import com.infamous.dungeons_gear.ranged.crossbows.AbstractDungeonsCrossbowItem;
+
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.*;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.*;
-
-import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
-import static com.infamous.dungeons_gear.items.RangedWeaponList.FERAL_SOUL_CROSSBOW;
-import static net.minecraft.entity.Entity.horizontalMag;
 
 public class AbilityUtils {
 
@@ -94,14 +109,14 @@ public class AbilityUtils {
 
             for(int i = 0; i < 16; ++i) {
                 double teleportX = livingEntity.getPosX() + (livingEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
-                double teleportY = MathHelper.clamp(livingEntity.getPosY() + (double)(livingEntity.getRNG().nextInt(16) - 8), 0.0D, (double)(world.func_234938_ad_() - 1));
+                double teleportY = MathHelper.clamp(livingEntity.getPosY() + (double)(livingEntity.getRNG().nextInt(16) - 8), 0.0D, (double)255);
                 double teleportZ = livingEntity.getPosZ() + (livingEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
                 if (livingEntity.isPassenger()) {
                     livingEntity.stopRiding();
                 }
 
                 if (livingEntity.attemptTeleport(teleportX, teleportY, teleportZ, true)) {
-                    SoundEvent lvt_18_1_ = livingEntity instanceof FoxEntity ? SoundEvents.field_232710_ez_ : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
+                    SoundEvent lvt_18_1_ = SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
                     world.playSound((PlayerEntity)null, lvt_5_1_, lvt_7_1_, lvt_9_1_, lvt_18_1_, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     livingEntity.playSound(lvt_18_1_, 1.0F, 1.0F);
                     break;
@@ -167,7 +182,7 @@ public class AbilityUtils {
             double motionX = target.getPosX() - (nearbyEntity.getPosX());
             double motionY = target.getPosY() - (nearbyEntity.getPosY());
             double motionZ = target.getPosZ() - (nearbyEntity.getPosZ());
-            Vector3d vector3d = new Vector3d(motionX, motionY, motionZ);
+            Vec3d vector3d = new Vec3d(motionX, motionY, motionZ);
 
             nearbyEntity.setMotion(vector3d);
             PROXY.spawnParticles(nearbyEntity, ParticleTypes.PORTAL);
@@ -226,7 +241,7 @@ public class AbilityUtils {
             double motionX = blockPos.getX() - (nearbyEntity.getPosX());
             double motionY = blockPos.getY() - (nearbyEntity.getPosY());
             double motionZ = blockPos.getZ() - (nearbyEntity.getPosZ());
-            Vector3d vector3d = new Vector3d(motionX, motionY, motionZ);
+            Vec3d vector3d = new Vec3d(motionX, motionY, motionZ);
 
             nearbyEntity.setMotion(vector3d);
             PROXY.spawnParticles(nearbyEntity, ParticleTypes.PORTAL);
@@ -247,7 +262,7 @@ public class AbilityUtils {
             double motionX = target.getPosX() - (nearbyEntity.getPosX());
             double motionY = target.getPosY() - (nearbyEntity.getPosY());
             double motionZ = target.getPosZ() - (nearbyEntity.getPosZ());
-            Vector3d vector3d = new Vector3d(motionX, motionY, motionZ);
+            Vec3d vector3d = new Vec3d(motionX, motionY, motionZ);
 
             nearbyEntity.setMotion(vector3d);
             nearbyEntity.addPotionEffect(chained);
@@ -267,9 +282,24 @@ public class AbilityUtils {
         }
     }
 
-    public static void setProjectileTowards(ProjectileEntity projectileEntity, double x, double y, double z, float inaccuracy){
+    public static void setProjectileTowards(ThrowableEntity projectileEntity, double x, double y, double z, float inaccuracy){
         Random random = new Random();
-        Vector3d vector3d = (new Vector3d(x, y, z))
+        Vec3d vector3d = (new Vec3d(x, y, z))
+                .normalize()
+                .add(random.nextGaussian() * (double)0.0075F * (double)inaccuracy,
+                        random.nextGaussian() * (double)0.0075F * (double)inaccuracy,
+                        random.nextGaussian() * (double)0.0075F * (double)inaccuracy);
+        projectileEntity.setMotion(vector3d);
+        float f = MathHelper.sqrt(horizontalMag(vector3d));
+        projectileEntity.rotationYaw = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI));
+        projectileEntity.rotationPitch = (float)(MathHelper.atan2(vector3d.y, (double)f) * (double)(180F / (float)Math.PI));
+        projectileEntity.prevRotationYaw = projectileEntity.rotationYaw;
+        projectileEntity.prevRotationPitch = projectileEntity.rotationPitch;
+    }
+
+    public static void setProjectileTowards(AbstractArrowEntity projectileEntity, double x, double y, double z, float inaccuracy){
+        Random random = new Random();
+        Vec3d vector3d = (new Vec3d(x, y, z))
                 .normalize()
                 .add(random.nextGaussian() * (double)0.0075F * (double)inaccuracy,
                         random.nextGaussian() * (double)0.0075F * (double)inaccuracy,
@@ -332,7 +362,7 @@ public class AbilityUtils {
             double towardsZ = target.getPosZ() - attacker.getPosZ();
             double euclideanDist = (double)MathHelper.sqrt(towardsX * towardsX + towardsZ * towardsZ);
             double towardsY = target.getPosYHeight(0.3333333333333333D) - arrowEntity.getPosY() + euclideanDist * (double)0.2F;
-            arrowEntity.func_234612_a_(attacker, attacker.rotationPitch, attacker.rotationYaw, 0.0F, arrowVelocity * 3.0F, 1.0F);
+            arrowEntity.shoot(attacker, attacker.rotationPitch, attacker.rotationYaw, 0.0F, arrowVelocity * 3.0F, 1.0F);
             setProjectileTowards(arrowEntity, towardsX, towardsY, towardsZ, 0);
             //
             arrowEntity.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
@@ -361,7 +391,7 @@ public class AbilityUtils {
             double towardsZ = target.getPosZ() - attacker.getPosZ();
             double euclideanDist = (double)MathHelper.sqrt(towardsX * towardsX + towardsZ * towardsZ);
             double towardsY = target.getPosYHeight(0.3333333333333333D) - snowballEntity.getPosY() + euclideanDist * (double)0.2F;
-            snowballEntity.func_234612_a_(attacker, attacker.rotationPitch, attacker.rotationYaw, 0.0F, 1.5F, 1.0F);
+            snowballEntity.shoot(attacker, attacker.rotationPitch, attacker.rotationYaw, 0.0F, 1.5F, 1.0F);
             setProjectileTowards(snowballEntity, towardsX, towardsY, towardsZ, 0);
             //
             attacker.world.addEntity(snowballEntity);
@@ -677,10 +707,10 @@ public class AbilityUtils {
             AbstractArrowEntity projectile;
             projectile = createChainReactionProjectile(world, attacker, projectileStack, originalArrow);
             projectile.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
-            Vector3d upVector = victim.getUpVector(1.0F);
-            Quaternion quaternion = new Quaternion(new Vector3f(upVector), centerOffset, true);
-            Vector3d lookVector = victim.getLook(1.0F);
-            Vector3f vector3f = new Vector3f(lookVector);
+            Vec3d upVector = victim.getUpVector(1.0F);
+            Quaternion quaternion = new Quaternion((new Vector3f((float)upVector.getX(),(float)upVector.getY(),(float)upVector.getZ())), centerOffset, true);
+            Vec3d lookVector = victim.getLook(1.0F);
+            Vector3f vector3f = new Vector3f((float)lookVector.getX(),(float)lookVector.getY(),(float)lookVector.getZ());
             vector3f.transform(quaternion);
             projectile.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), v1, v2);
             world.addEntity(projectile);

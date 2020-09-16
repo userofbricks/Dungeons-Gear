@@ -1,32 +1,33 @@
 package com.infamous.dungeons_gear.artifacts;
 
-import com.infamous.dungeons_gear.armor.BattleRobeItem;
-import com.infamous.dungeons_gear.armor.EvocationRobeItem;
-import com.infamous.dungeons_gear.armor.GuardsArmorItem;
+import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
+import static com.infamous.dungeons_gear.utilties.AbilityUtils.isPetOfAttacker;
+
+import java.util.List;
+
 import com.infamous.dungeons_gear.interfaces.IArtifact;
 import com.infamous.dungeons_gear.items.ArtifactList;
+
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
-
-import static com.infamous.dungeons_gear.DungeonsGear.PROXY;
-import static com.infamous.dungeons_gear.utilties.AbilityUtils.isPetOfAttacker;
 
 public class WindHornItem extends Item implements IArtifact {
     public WindHornItem(Properties properties) {
@@ -58,7 +59,7 @@ public class WindHornItem extends Item implements IArtifact {
                 xRatio = (Math.random() - Math.random()) * 0.01D;
             }
             nearbyEntity.attackedAtYaw = (float)(MathHelper.atan2(zRatio, xRatio) * 57.2957763671875D - (double)nearbyEntity.rotationYaw);
-            nearbyEntity.func_233627_a_(0.4F  * knockbackMultiplier, xRatio, zRatio);
+            nearbyEntity.knockBack(nearbyEntity, 0.4F  * knockbackMultiplier, xRatio, zRatio);
             // END OF KNOCKBACK
 
             PROXY.spawnParticles(nearbyEntity, ParticleTypes.CLOUD);

@@ -1,15 +1,19 @@
 package com.infamous.dungeons_gear.goals;
 
-import net.minecraft.entity.*;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
+
+import com.infamous.dungeons_gear.utilties.AxisAlignedBBUtils;
+
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.GameRules;
-
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
 
 public class MappedHurtByTargetGoal extends TargetGoal {
     private static final EntityPredicate field_220795_a = (new EntityPredicate()).setLineOfSiteRequired().setUseInvisibilityCheck();
@@ -33,18 +37,13 @@ public class MappedHurtByTargetGoal extends TargetGoal {
         int i = this.goalOwner.getRevengeTimer();
         LivingEntity livingentity = this.goalOwner.getRevengeTarget();
         if (i != this.revengeTimerOld && livingentity != null) {
-            if (livingentity.getType() == EntityType.PLAYER
-                    && this.goalOwner.world.getGameRules().getBoolean(GameRules.field_234896_G_)) {
-                return false;
-            } else {
-                for(Class<?> oclass : this.excludedReinforcementTypes) {
-                    if (oclass.isAssignableFrom(livingentity.getClass())) {
-                        return false;
-                    }
+            for(Class<?> oclass : this.excludedReinforcementTypes) {
+                if (oclass.isAssignableFrom(livingentity.getClass())) {
+                    return false;
                 }
-
-                return this.isSuitableTarget(livingentity, field_220795_a);
             }
+
+            return this.isSuitableTarget(livingentity, field_220795_a);
         } else {
             return false;
         }
@@ -73,7 +72,7 @@ public class MappedHurtByTargetGoal extends TargetGoal {
 
     protected void alertOthers() {
         double d0 = this.getTargetDistance();
-        AxisAlignedBB axisalignedbb = AxisAlignedBB.func_241549_a_(this.goalOwner.getPositionVec()).grow(d0, 10.0D, d0);
+        AxisAlignedBB axisalignedbb = AxisAlignedBBUtils.func_241549_a_(this.goalOwner.getPositionVec()).grow(d0, 10.0D, d0);
         List<MobEntity> list = this.goalOwner.world.getLoadedEntitiesWithinAABB(this.goalOwner.getClass(), axisalignedbb);
         Iterator iterator = list.iterator();
 

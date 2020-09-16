@@ -5,7 +5,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.dragon.EnderDragonPartEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +22,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameType;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
@@ -73,7 +73,7 @@ public class PlayerUtils {
         if (ForgeHooks.onPlayerAttackTarget(player, target)) {
             if (target.canBeAttackedWithItem() && !target.hitByEntity(player)) {
                 // get attack damage attribute value
-                float attackDamage = (float)player.func_233637_b_(Attributes.field_233823_f_);
+                float attackDamage = (float)player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
                 float enchantmentAffectsTargetBonus;
                 if (target instanceof LivingEntity) {
                     enchantmentAffectsTargetBonus = EnchantmentHelper.getModifierForCreature(player.getHeldItemOffhand(), ((LivingEntity)target).getCreatureAttribute());
@@ -96,7 +96,7 @@ public class PlayerUtils {
                         flag1 = true;
                     }
 
-                    boolean flag2 = flag && player.fallDistance > 0.0F && !player.func_233570_aj_() && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Effects.BLINDNESS) && !player.isPassenger() && target instanceof LivingEntity;
+                    boolean flag2 = flag && player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Effects.BLINDNESS) && !player.isPassenger() && target instanceof LivingEntity;
                     flag2 = flag2 && !player.isSprinting();
                     CriticalHitEvent hitResult = ForgeHooks.getCriticalHit(player, target, flag2, flag2 ? 1.5F : 1.0F);
                     flag2 = hitResult != null;
@@ -107,7 +107,7 @@ public class PlayerUtils {
                     attackDamage += enchantmentAffectsTargetBonus;
                     boolean flag3 = false;
                     double d0 = (double)(player.distanceWalkedModified - player.prevDistanceWalkedModified);
-                    if (flag && !flag2 && !flag1 && player.func_233570_aj_() && d0 < (double)player.getAIMoveSpeed()) {
+                    if (flag && !flag2 && !flag1 && player.onGround && d0 < (double)player.getAIMoveSpeed()) {
                         ItemStack itemstack = player.getHeldItem(Hand.OFF_HAND);
                         if (itemstack.getItem() instanceof SwordItem) {
                             flag3 = true;
@@ -125,13 +125,13 @@ public class PlayerUtils {
                         }
                     }
 
-                    Vector3d vector3d = target.getMotion();
+                    Vec3d vector3d = target.getMotion();
                     DamageSource offhandAttack = new OffhandAttackDamageSource(player);
                     boolean flag5 = target.attackEntityFrom(offhandAttack, attackDamage);
                     if (flag5) {
                         if (i > 0) {
                             if (target instanceof LivingEntity) {
-                                ((LivingEntity)target).func_233627_a_((float)i * 0.5F, (double) MathHelper.sin(player.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(player.rotationYaw * 0.017453292F)));
+                                ((LivingEntity)target).knockBack(target, (float)i * 0.5F, (double) MathHelper.sin(player.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(player.rotationYaw * 0.017453292F)));
                             } else {
                                 target.addVelocity((double)(-MathHelper.sin(player.rotationYaw * 0.017453292F) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(player.rotationYaw * 0.017453292F) * (float)i * 0.5F));
                             }
@@ -164,7 +164,7 @@ public class PlayerUtils {
                                 } while(livingentity instanceof ArmorStandEntity && ((ArmorStandEntity)livingentity).hasMarker());
 
                                 if (player.getDistanceSq(livingentity) < 9.0D) {
-                                    livingentity.func_233627_a_(0.4F, (double)MathHelper.sin(player.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(player.rotationYaw * 0.017453292F)));
+                                    livingentity.knockBack(livingentity, 0.4F, (double)MathHelper.sin(player.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(player.rotationYaw * 0.017453292F)));
                                     livingentity.attackEntityFrom(offhandAttack, f3);
                                 }
                             }

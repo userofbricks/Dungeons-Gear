@@ -6,6 +6,8 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_gear.interfaces.IExtendedAttackReach;
 import com.infamous.dungeons_gear.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_gear.items.WeaponList;
+import com.infamous.dungeons_gear.utilties.BlockUtils;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -13,9 +15,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -30,14 +31,14 @@ import java.util.List;
 
 public class SpearItem extends TieredItem implements IExtendedAttackReach, IMeleeWeapon {
     private final float attackDamage;
-    private final Multimap<Attribute, AttributeModifier> attributeModifierMultimap;
+    private final Multimap<String, AttributeModifier> attributeModifierMultimap;
 
     public SpearItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties properties) {
         super(tier, properties);
         this.attackDamage = (float)attackDamageIn + tier.getAttackDamage();
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.field_233823_f_, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.field_233825_h_, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
+        ImmutableMultimap.Builder<String, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
+        builder.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
         this.attributeModifierMultimap = builder.build();
     }
 
@@ -49,12 +50,12 @@ public class SpearItem extends TieredItem implements IExtendedAttackReach, IMele
         return !playerEntity.isCreative();
     }
 
-    public float getDestroySpeed(ItemStack p_150893_1_, BlockState p_150893_2_) {
-        if (p_150893_2_.isIn(Blocks.COBWEB)) {
+    public float getDestroySpeed(ItemStack p_150893_1_, BlockState blockState) {
+        if (BlockUtils.isIn(blockState, Blocks.COBWEB)) {
             return 15.0F;
         } else {
-            Material lvt_3_1_ = p_150893_2_.getMaterial();
-            return lvt_3_1_ != Material.PLANTS && lvt_3_1_ != Material.TALL_PLANTS && lvt_3_1_ != Material.CORAL && !p_150893_2_.func_235714_a_(BlockTags.LEAVES) && lvt_3_1_ != Material.GOURD ? 1.0F : 1.5F;
+            Material lvt_3_1_ = blockState.getMaterial();
+            return lvt_3_1_ != Material.PLANTS && lvt_3_1_ != Material.TALL_PLANTS && lvt_3_1_ != Material.CORAL && !blockState.isIn(BlockTags.LEAVES) && lvt_3_1_ != Material.GOURD ? 1.0F : 1.5F;
         }
     }
 
@@ -75,11 +76,11 @@ public class SpearItem extends TieredItem implements IExtendedAttackReach, IMele
         return true;
     }
 
-    public boolean canHarvestBlock(BlockState p_150897_1_) {
-        return p_150897_1_.isIn(Blocks.COBWEB);
+    public boolean canHarvestBlock(BlockState state) {
+        return BlockUtils.isIn(state, Blocks.COBWEB);
     }
 
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType p_111205_1_) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType p_111205_1_) {
         return p_111205_1_ == EquipmentSlotType.MAINHAND ? this.attributeModifierMultimap : super.getAttributeModifiers(p_111205_1_);
     }
 

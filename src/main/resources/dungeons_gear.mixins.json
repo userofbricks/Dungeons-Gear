@@ -5,11 +5,9 @@
   "minVersion": "0.8",
   "refmap": "dungeons_gear.refmap.json",
   "mixins": [
+    "PlayerRendererMixin",
     "CrossbowItemMixin",
     "BowItemMixin"
-  ],
-  "client": [
-    "PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

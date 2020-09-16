@@ -147,10 +147,10 @@ public class ArmorEvents {
         LivingEntity livingEntity = event.getEntityLiving();
         ItemStack helmet = livingEntity.getItemStackFromSlot(EquipmentSlotType.HEAD);
         ItemStack chestplate = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-        reduceFreezingEffect(event, effectInstance, helmet, chestplate);
+        reduceFreezingEffect(event, effectInstance, livingEntity, helmet, chestplate);
     }
 
-    private static void reduceFreezingEffect(PotionEvent.PotionAddedEvent event, EffectInstance effectInstance, ItemStack helmet, ItemStack chestplate) {
+    private static void reduceFreezingEffect(PotionEvent.PotionAddedEvent event, EffectInstance effectInstance, LivingEntity entity, ItemStack helmet, ItemStack chestplate) {
         float freezingResistance = helmet.getItem() instanceof IArmor ? (float) ((IArmor) helmet.getItem()).getFreezingResistance() : 0;
         float freezingResistance2 = chestplate.getItem() instanceof IArmor ? (float) ((IArmor) chestplate.getItem()).getFreezingResistance() : 0;
 
@@ -161,10 +161,12 @@ public class ArmorEvents {
                 int oldAmplifier = effectInstance.getAmplifier();
                 if(oldAmplifier == 0){
                     int oldDuration = effectInstance.getDuration();
-                    effectInstance.duration = (int)(oldDuration * freezingMultiplier);
+                    entity.removeActivePotionEffect(effectInstance.getPotion());
+                    entity.addPotionEffect(new EffectInstance(effectInstance.getPotion(), (int)(oldDuration * freezingMultiplier)));
                 }
                 else{
-                    effectInstance.amplifier = (int)(oldAmplifier * freezingMultiplier);
+                    entity.removeActivePotionEffect(effectInstance.getPotion());
+                    entity.addPotionEffect(new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration(), (int)(oldAmplifier * freezingMultiplier)));
                 }
             }
         }

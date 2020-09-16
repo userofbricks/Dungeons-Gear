@@ -3,7 +3,6 @@ package com.infamous.dungeons_gear.ranged.crossbows;
 import com.infamous.dungeons_gear.capabilities.weapon.IWeapon;
 import com.infamous.dungeons_gear.capabilities.weapon.WeaponProvider;
 import com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList;
-import com.infamous.dungeons_gear.utilties.EnchantUtils;
 import com.infamous.dungeons_gear.utilties.AbilityUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -70,8 +69,8 @@ public class CrossbowEvents {
     @SubscribeEvent
     public static void onExplodingCrossbowImpact(ProjectileImpactEvent.Arrow event){
         AbstractArrowEntity arrowEntity = event.getArrow();
-        if(arrowEntity.func_234616_v_() instanceof LivingEntity){
-            LivingEntity shooter =(LivingEntity) arrowEntity.func_234616_v_();
+        if(arrowEntity.getShooter() instanceof LivingEntity){
+            LivingEntity shooter =(LivingEntity) arrowEntity.getShooter();
             boolean explodingCrossbowFlag = arrowEntity.getTags().contains("ExplodingCrossbow")
                     || arrowEntity.getTags().contains("FireboltThrower")
                     || arrowEntity.getTags().contains("ImplodingCrossbow");
@@ -101,8 +100,8 @@ public class CrossbowEvents {
         if(event.getSource() instanceof IndirectEntityDamageSource){
             if(event.getSource().getImmediateSource() instanceof AbstractArrowEntity){
                 AbstractArrowEntity arrowEntity = (AbstractArrowEntity) event.getSource().getImmediateSource();
-                if(arrowEntity.func_234616_v_() instanceof LivingEntity){
-                    LivingEntity shooter = (LivingEntity) arrowEntity.func_234616_v_();
+                if(arrowEntity.getShooter() instanceof LivingEntity){
+                    LivingEntity shooter = (LivingEntity) arrowEntity.getShooter();
                     boolean explodingCrossbowFlag = arrowEntity.getTags().contains("ExplodingCrossbow")
                             || arrowEntity.getTags().contains("FireboltThrower")
                             || arrowEntity.getTags().contains("ImplodingCrossbow");

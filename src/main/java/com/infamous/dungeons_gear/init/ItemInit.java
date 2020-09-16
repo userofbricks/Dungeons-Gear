@@ -17,7 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import sun.security.provider.SHA;
 
 import static com.infamous.dungeons_gear.items.ArmorList.*;
 import static com.infamous.dungeons_gear.items.ArmorMaterialList.*;
