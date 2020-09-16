@@ -3,7 +3,7 @@ package com.infamous.dungeons_gear.enchantments.melee_ranged;
 import com.infamous.dungeons_gear.enchantments.*;
 import com.infamous.dungeons_gear.enchantments.lists.MeleeRangedEnchantmentList;
 import com.infamous.dungeons_gear.enchantments.types.DamageBoostEnchantment;
-import com.infamous.dungeons_gear.utilties.AbilityUtils;
+import com.infamous.dungeons_gear.init.ParticleInit;
 import com.infamous.dungeons_gear.utilties.EnchantUtils;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.Enchantment;
@@ -12,7 +12,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,7 +63,7 @@ public class EnigmaResonatorEnchantment extends DamageBoostEnchantment {
                     float newDamageModifier = event.getDamageModifier() == event.getOldDamageModifier() ? event.getDamageModifier() + 1.5F : event.getDamageModifier() * 3.0F;
                     event.setDamageModifier(newDamageModifier);
                     // soul particles
-                    PROXY.spawnParticles(attacker, ParticleTypes.FLAME);
+                    PROXY.spawnParticles(attacker, ParticleInit.SOUL.get());
                 }
             }
             if(uniqueWeaponFlag){
@@ -74,7 +73,7 @@ public class EnigmaResonatorEnchantment extends DamageBoostEnchantment {
                     float newDamageModifier = event.getDamageModifier() == event.getOldDamageModifier() ? event.getDamageModifier() + 1.5F : event.getDamageModifier() * 3.0F;
                     event.setDamageModifier(newDamageModifier);
                     // soul particles
-                    PROXY.spawnParticles(attacker, ParticleTypes.FLAME);
+                    PROXY.spawnParticles(attacker, ParticleInit.SOUL.get());
                 }
             }
         }

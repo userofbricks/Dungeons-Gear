@@ -2,7 +2,7 @@ package com.infamous.dungeons_gear.enchantments.melee;
 
 import com.infamous.dungeons_gear.damagesources.OffhandAttackDamageSource;
 import com.infamous.dungeons_gear.enchantments.ModEnchantmentTypes;
-import com.infamous.dungeons_gear.utilties.AbilityUtils;
+import com.infamous.dungeons_gear.init.ParticleInit;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,7 +38,7 @@ public class SoulSiphonEnchantment extends Enchantment {
         if(chance <=  0.1F){
             ((PlayerEntity)user).giveExperiencePoints(level*3);
             // soul particles
-            PROXY.spawnParticles(target, ParticleTypes.FLAME);
+            PROXY.spawnParticles(target, ParticleInit.SOUL.get());
         }
     }
 
@@ -56,7 +55,7 @@ public class SoulSiphonEnchantment extends Enchantment {
             if(chance <=  0.1F) {
                 attacker.giveExperiencePoints(3);
                 // soul particles
-                PROXY.spawnParticles(victim, ParticleTypes.FLAME);
+                PROXY.spawnParticles(victim, ParticleInit.SOUL.get());
             }
         }
     }

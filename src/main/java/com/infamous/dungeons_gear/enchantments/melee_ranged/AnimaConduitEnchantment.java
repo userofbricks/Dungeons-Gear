@@ -4,6 +4,7 @@ import com.infamous.dungeons_gear.DungeonsGear;
 import com.infamous.dungeons_gear.enchantments.*;
 import com.infamous.dungeons_gear.enchantments.lists.MeleeRangedEnchantmentList;
 import com.infamous.dungeons_gear.enchantments.types.HealingEnchantment;
+import com.infamous.dungeons_gear.init.ParticleInit;
 import com.infamous.dungeons_gear.utilties.AbilityUtils;
 import com.infamous.dungeons_gear.utilties.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -59,7 +60,7 @@ public class AnimaConduitEnchantment extends HealingEnchantment {
                                 PlayerEntity playerEntity = (PlayerEntity) attacker;
                                 int experiencePoints = getDroppedExperience(mobEntity, playerEntity);
                                 double soulsToHealth = experiencePoints * (0.01 * animaConduitLevel);
-                                PROXY.spawnParticles(playerEntity, ParticleTypes.FLAME);
+                                PROXY.spawnParticles(playerEntity, ParticleInit.SOUL.get());
                                 playerEntity.heal((float)soulsToHealth);
                             }
                         }
@@ -78,7 +79,7 @@ public class AnimaConduitEnchantment extends HealingEnchantment {
                             PlayerEntity playerEntity = (PlayerEntity) attacker;
                             int experiencePoints = getDroppedExperience(mobEntity, playerEntity);
                             double soulsToHealth = experiencePoints * (0.01 * animaConduitLevel);
-                            PROXY.spawnParticles(playerEntity, ParticleTypes.FLAME);
+                            PROXY.spawnParticles(playerEntity, ParticleInit.SOUL.get());
                             playerEntity.heal((float)soulsToHealth);
                         }
                     }

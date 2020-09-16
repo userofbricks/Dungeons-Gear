@@ -13,4 +13,5 @@ public class ParticleInit {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
 
     public static final RegistryObject<BasicParticleType> ELECTRIC_SHOCK = PARTICLES.register("electric_shock", () -> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SOUL = PARTICLES.register("soul", () -> new BasicParticleType(false));
 }
