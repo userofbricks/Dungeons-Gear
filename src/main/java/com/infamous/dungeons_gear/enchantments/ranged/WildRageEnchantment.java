@@ -1,9 +1,12 @@
 package com.infamous.dungeons_gear.enchantments.ranged;
 
-import com.infamous.dungeons_gear.utilties.EnchantUtils;
+import static com.infamous.dungeons_gear.DungeonsGear.MODID;
+
 import com.infamous.dungeons_gear.enchantments.ModEnchantmentTypes;
 import com.infamous.dungeons_gear.enchantments.lists.RangedEnchantmentList;
 import com.infamous.dungeons_gear.utilties.AbilityUtils;
+import com.infamous.dungeons_gear.utilties.EnchantUtils;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -11,7 +14,6 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -19,14 +21,11 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.infamous.dungeons_gear.DungeonsGear.MODID;
-import static com.infamous.dungeons_gear.items.RangedWeaponList.THE_PINK_SCOUNDREL;
-
 @Mod.EventBusSubscriber(modid= MODID)
 public class WildRageEnchantment extends Enchantment {
 
     public WildRageEnchantment() {
-        super(Rarity.RARE, ModEnchantmentTypes.CHEST_RANGED, new EquipmentSlotType[]{
+        super(Rarity.RARE, ModEnchantmentTypes.ARMOR_RANGED, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND,
                 EquipmentSlotType.HEAD,
                 EquipmentSlotType.CHEST,
