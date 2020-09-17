@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerRendererMixin {
 
     @Inject(at = @At("RETURN"), method = "getArmPose", cancellable = true)
-    private static void func_241741_a_(AbstractClientPlayerEntity clientPlayerEntity, Hand hand, CallbackInfoReturnable<BipedModel.ArmPose> cir){
+    private static void getArmPose(AbstractClientPlayerEntity clientPlayerEntity, Hand hand, CallbackInfoReturnable<BipedModel.ArmPose> cir){
         ItemStack itemstack = clientPlayerEntity.getHeldItem(hand);
         
         if (!clientPlayerEntity.isSwingInProgress && itemstack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(itemstack)) {
