@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerRenderer.class)
 public class PlayerRendererMixin {
 
-    @Inject(at = @At("RETURN"), method = "func_241741_a_", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getArmPose", cancellable = true)
     private static void func_241741_a_(AbstractClientPlayerEntity clientPlayerEntity, Hand hand, CallbackInfoReturnable<BipedModel.ArmPose> cir){
         ItemStack itemstack = clientPlayerEntity.getHeldItem(hand);
         
