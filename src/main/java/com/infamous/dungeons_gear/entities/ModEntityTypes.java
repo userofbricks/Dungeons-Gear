@@ -13,7 +13,8 @@ import static com.infamous.dungeons_gear.DungeonsGear.MODID;
 
 public final class ModEntityTypes {
 
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
+    @SuppressWarnings("deprecation")
+	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = new DeferredRegister<EntityType<?>>(ForgeRegistries.ENTITIES, MODID);
 
     public static final String BEAM_NAME = "beam";
     public static final RegistryObject<EntityType<BeamEntity>> BEAM = ENTITY_TYPES.register(BEAM_NAME, () ->
