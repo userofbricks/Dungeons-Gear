@@ -26,6 +26,7 @@ run/defaultconfigs
 run/logs
 run/options.txt
 run/recourcepacks
+run/resourcepacks/*
 run/saves
 run/server.properties
 run/servers.dat
