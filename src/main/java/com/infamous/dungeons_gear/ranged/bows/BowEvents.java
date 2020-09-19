@@ -72,7 +72,7 @@ public class BowEvents {
     @SubscribeEvent
     public static void onSpecialArrowImpact(ProjectileImpactEvent.Arrow event){
         RayTraceResult rayTraceResult = event.getRayTraceResult();
-        if(rayTraceResult instanceof EntityRayTraceResult){
+        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
             AbstractArrowEntity arrowEntity = event.getArrow();
             if(arrowEntity.getShooter() instanceof LivingEntity){
                 LivingEntity shooter = (LivingEntity)arrowEntity.getShooter();
