@@ -123,7 +123,7 @@ public class GlobalEvents {
     }
 
     @SubscribeEvent
-    public static void onGhostFormAttack(LivingDamageEvent event){
+    public static void onShadowFormAttack(LivingDamageEvent event){
         if(event.getSource().getTrueSource() instanceof PlayerEntity){
             PlayerEntity playerEntity = (PlayerEntity)event.getSource().getTrueSource();
 
@@ -134,6 +134,7 @@ public class GlobalEvents {
                 comboCap.setShadowForm(false);
                 playerEntity.removePotionEffect(Effects.INVISIBILITY);
             }
+            /*
             if(comboCap.getGhostForm()){
                 comboCap.setGhostForm(false);
                 playerEntity.removePotionEffect(Effects.INVISIBILITY);
@@ -141,6 +142,7 @@ public class GlobalEvents {
                 playerEntity.removePotionEffect(Effects.SPEED);
                 playerEntity.removePotionEffect(Effects.RESISTANCE);
             }
+            */
         }
     }
 
