@@ -55,6 +55,7 @@ public class SickleItem extends HoeItem implements IOffhandAttack, IMeleeWeapon 
         return enchantment.type.canEnchantItem(Items.IRON_SWORD) && enchantment != Enchantments.SWEEPING;
     }
 
+    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND  || equipmentSlot == EquipmentSlotType.OFFHAND?
                 this.field_234674_d_ : super.getAttributeModifiers(equipmentSlot);
