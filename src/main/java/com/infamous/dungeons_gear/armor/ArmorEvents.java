@@ -25,6 +25,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.util.Collection;
 import java.util.List;
@@ -158,16 +159,8 @@ public class ArmorEvents {
 
         if(freezingMultiplier > 0){
             if(event.getPotionEffect().getPotion() == Effects.SLOWNESS || event.getPotionEffect().getPotion() == Effects.MINING_FATIGUE){
-                int oldAmplifier = effectInstance.getAmplifier();
-                if(oldAmplifier == 0){
-                    int oldDuration = effectInstance.getDuration();
-                    entity.removeActivePotionEffect(effectInstance.getPotion());
-                    entity.addPotionEffect(new EffectInstance(effectInstance.getPotion(), (int)(oldDuration * freezingMultiplier)));
-                }
-                else{
-                    entity.removeActivePotionEffect(effectInstance.getPotion());
-                    entity.addPotionEffect(new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration(), (int)(oldAmplifier * freezingMultiplier)));
-                }
+                int oldDuration = effectInstance.getDuration();
+                ObfuscationReflectionHelper.setPrivateValue(EffectInstance.class, effectInstance, (int)(oldDuration * freezingMultiplier), "field_76460_b");
             }
         }
     }
