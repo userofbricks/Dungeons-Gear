@@ -80,6 +80,7 @@ public class SpearItem extends TieredItem implements IExtendedAttackReach, IMele
         return BlockUtils.isIn(state, Blocks.COBWEB);
     }
 
+    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType p_111205_1_) {
         return p_111205_1_ == EquipmentSlotType.MAINHAND ? this.attributeModifierMultimap : super.getAttributeModifiers(p_111205_1_);
     }

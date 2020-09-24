@@ -33,12 +33,12 @@ public class DaggerItem extends SwordItem implements IOffhandAttack, IMeleeWeapo
         super(tier, attackDamageIn, attackSpeedIn, builder);
         this.attackSpeed = attackSpeedIn;
         Builder<String, AttributeModifier> builder1 = ImmutableMultimap.builder();
-        builder1.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.getAttackDamage(), AttributeModifier.Operation.ADDITION));
-        builder1.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, AttributeModifier.Operation.ADDITION));
+        builder1.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.getAttackDamage(), AttributeModifier.Operation.ADDITION));
+        builder1.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)this.attackSpeed, AttributeModifier.Operation.ADDITION));
         this.field_234674_d_ = builder1.build();
     }
 
-
+    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND  || equipmentSlot == EquipmentSlotType.OFFHAND?
                 this.field_234674_d_ : super.getAttributeModifiers(equipmentSlot);
